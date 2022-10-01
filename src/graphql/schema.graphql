@@ -1,0 +1,53 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+type Query {
+  getTravelLogs: [TravelLog!]!
+  me: User
+}
+type TravelLog {
+  _id: String!
+  username: String!
+  title: String!
+  description: String!
+  rating: Float!
+  lon: Float!
+  lat: Float!
+}
+type User {
+  _id: String!
+  firstName: String!
+  lastName: String!
+  username: String!
+  email: String!
+}
+type Mutation {
+  createTravelLog(input: CreateTravelLogInput!): TravelLog!
+  createUser(input: CreateUserInput!): User!
+  login(input: LoginInput!): String!
+}
+input CreateTravelLogInput {
+  title: String!
+  description: String!
+  rating: Float!
+  lon: Float!
+  lat: Float!
+}
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  email: String!
+  username: String!
+  password: String!
+}
+input LoginInput {
+  email: String
+  username: String
+  password: String!
+}
+"Exposes a URL that specifies the behaviour of this scalar."
+directive @specifiedBy(
+    "The URL that specifies the behaviour of this scalar."
+    url: String!
+  ) on SCALAR
