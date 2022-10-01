@@ -1,37 +1,29 @@
-import { useLayoutEffect, useRef } from 'react';
-import H from '@here/maps-api-for-javascript';
-
-export const Map = () => {
-  // Create a reference to the HTML element we want to put the map on
-  const mapRef = useRef(null);
-  /**
-   * Create the map instance
-   * While `useEffect` could also be used here, `useLayoutEffect` will render
-   * the map sooner
-   */
-  useLayoutEffect(() => {
-    // `mapRef.current` will be `undefined` when this hook first runs; edge case that
-    if (!mapRef.current) return;
-    const platform = new H.service.Platform({
-      apikey: process.env.REACT_APP_HERE_API_KEY as string,
-    });
-    const defaultLayers = platform.createDefaultLayers();
-    const hMap = new H.Map(mapRef.current, defaultLayers.vector.normal.map, {
-      center: { lat: 0, lng: 5 },
-      zoom: 2,
-      pixelRatio: window.devicePixelRatio || 1,
-    });
-
-    const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(hMap));
-
-    const ui = H.ui.UI.createDefault(hMap, defaultLayers);
-
-    // This will act as a cleanup to run once this hook runs again.
-    // This includes when the component un-mounts
-    return () => {
-      hMap.dispose();
-    };
-  }, [mapRef]); // This will run this hook every time this ref is updated
-
-  return <div className='map' ref={mapRef} style={{ height: '500px' }} />;
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet';
+const Map = () => {
+  return (
+    <MapContainer
+      style={{ height: '98vh', width: '100%' }}
+      center={[52.52, 13.405]}
+      zoom={16}
+      minZoom={2}
+      scrollWheelZoom={true}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+      />
+      <Marker position={[52.52, 13.405]}>
+        <Popup>
+          A pretty CSS3 popup. <br /> Easily customizable.
+          <img
+            style={{ height: '100%', width: '100%' }}
+            src='https://mdn.github.io/learning-area/html/multimedia-and-embedding/tasks/images/larch.jpg'
+            alt='Several tall evergreen trees called larches'
+          ></img>
+        </Popup>
+      </Marker>
+    </MapContainer>
+  );
 };
+
+export default Map;
